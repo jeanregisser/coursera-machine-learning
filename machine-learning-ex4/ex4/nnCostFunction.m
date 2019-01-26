@@ -62,9 +62,47 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% map number to [0 ... 1 (indice == number) ... 0]
+mappedY = zeros(m, num_labels);
+mappedY(sub2ind(size(mappedY), (1:m)', y)) = 1;
 
+Theta1Reg = Theta1;
+Theta1Reg(:, 1) = 0;
+Theta2Reg = Theta2;
+Theta2Reg(:, 1) = 0;
 
+J = 1 / m * sum((sum(-mappedY .* log(hyp(Theta1, Theta2, X)) - (1 - mappedY) .* log(1 - hyp(Theta1, Theta2, X)), 2))) ...
+  + lambda / (2 * m) * (sum(sum(Theta1Reg .^ 2, 2)) + sum(sum(Theta2Reg .^ 2, 2)));
 
+D1 = 0;
+D2 = 0;
+
+for t = 1:m
+  % step 1
+  xt = X(t, :)';
+  yt = mappedY(t, :)';
+
+  a1 = [1; xt];
+  z2 = Theta1 * a1;
+  a2 = [1; sigmoid(z2)];
+  z3 = Theta2 * a2;
+  a3 = sigmoid(z3); 
+
+  % step 2
+  d3 = (a3 - yt);
+
+  % step 3
+  d2 = Theta2' * d3 .* [1; sigmoidGradient(z2)];
+
+  % step 4
+  D1 = D1 + d2(2:end) * a1';
+  D2 = D2 + d3 * a2';
+end
+
+% step 5
+
+Theta1_grad = 1 / m * D1 + lambda / m * Theta1Reg;
+Theta2_grad = 1 / m * D2 + lambda / m * Theta2Reg;
 
 
 
