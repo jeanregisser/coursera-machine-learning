@@ -23,10 +23,30 @@ sigma = 0.3;
 %        mean(double(predictions ~= yval))
 %
 
+vals = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
 
+%vals_count = numel(vals);
+%
+%errors = zeros(vals_count, vals_count)
+%
+%for i = 1:vals_count
+%  C_temp = vals(i);
+%  for j = 1:vals_count
+%    sigma_temp = vals(j);
+%    model = svmTrain(X, y, C_temp, @(x1, x2) gaussianKernel(x1, x2, sigma_temp)); 
+%    predictions = svmPredict(model, Xval);
+%    errors(i, j) = mean(double(predictions ~= yval))
+%  end
+%end
+%
+%[m, ind] = min(errors(:));
+%[r, c] = ind2sub(size(errors), ind); %r and c are the numbers you are looking for.
 
+r = 5;
+c = 3;
 
-
+C = vals(r)
+sigma = vals(c)
 
 
 % =========================================================================
