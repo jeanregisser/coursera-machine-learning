@@ -21,7 +21,16 @@ idx = zeros(size(X,1), 1);
 % Note: You can use a for-loop over the examples to compute this.
 %
 
+for i = 1:size(X,1)
+  x = X(i, :)';
 
+  dists = zeros(K, 1);
+  for j = 1:K
+    dists(j) = sum((x - centroids(j, :)') .^ 2);
+  end
+
+  [dummy, idx(i)] = min(dists);
+end
 
 
 
